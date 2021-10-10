@@ -1,0 +1,77 @@
+{
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "width": 800,
+    "height": 600,
+    "title": "Total Recognized Decisions for Asylum seekers (2006 - 2020)",
+    "data": {
+      "url": "https://raw.githubusercontent.com/HimayaW/Week10HW/main/data/asylum-decisions.csv"
+    },
+    "params": [
+      {
+        "name": "Year",
+        "value": 0,
+        "bind": {
+          "input": "range",
+          "min": 2006,
+          "max": 2020,
+          "step": 1,
+          "name": "Years: "
+        }
+      }
+    ],
+    "transform": [
+      {"filter": "datum.Year > 2005"},
+      {"filter": "datum.'Complementary protection' > 0"}
+    ],
+    "encoding": {
+      "x": {
+        "field": "Complementary protection",
+        "type": "quantitative",
+        "title": "Protection provided",
+        "axis": {"tickCount": 10}
+      },
+      "y": {
+        "field": "Recognized decisions",
+        "type": "quantitative",
+        "axis": {"tickCount": 8},
+        "scale": {"type": "log", "domain": [1, 100000]}
+      }
+    },
+    "layer": [
+      {
+        "mark": "circle",
+        "encoding": {
+          "color": {
+            "field": "Country of asylum",
+            "type": "nominal"
+          },
+          "tooltip": [
+            {"field": "Country of asylum", "type": "nominal"},
+            {"field": "Complementary protection", "type": "quantitative", "format": ","},
+            {"field": "Recognized decisiosn", "type": "quantitative", "format": ","}
+          ]
+        }
+      },
+      {
+        "mark": {
+          "type": "text",
+          "align": "right",
+          "baseline": "middle",
+          "dx": -12,
+          "fontSize": 11.5,
+          "fontStyle": "italic"
+        },
+        "encoding": {
+          "text": {"field": "Country of asylum", "type": "nominal"},
+          "color": {"value": "black"},
+          "opacity": {
+            "condition": {
+              "test": "datum['Country of asylum'] == 'Germany' || datum['Country'] == 'Singapore' || datum['Country'] == 'Australia' || datum['Country'] == 'Switzerland' || datum['Country'] == 'France' || datum['Country'] == 'Russian Federation' ||  datum['Country'] == 'Spain'",
+              "value": 1
+            },
+            "value": 0
+          }
+        }
+      }
+    ]
+  }
